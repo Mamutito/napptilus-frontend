@@ -1,11 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
-import { CartItem, Phone } from "../types/Phone";
+import { CartItem, Phone, PhoneDetailEntity } from "../types/Phone";
 
 interface StoreContextType {
   phones: Phone[];
   cart: CartItem[];
   addToCart: (phone: Phone) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (id: string) => void;
+  getPhoneById: (id: string) => Promise<PhoneDetailEntity | null>;
 }
 
 export const StoreContext = createContext<StoreContextType | undefined>(
@@ -60,12 +61,34 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
+  const getPhoneById = async (
+    id: string
+  ): Promise<PhoneDetailEntity | null> => {
+    try {
+      const response = await fetch(
+        `https://prueba-tecnica-api-tienda-moviles.onrender.com/products/${id}`,
+        {
+          headers: {
+            "x-api-key": "87909682e6cd74208f41a6ef39fe4191",
+          },
+        }
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching phone details:", error);
+      return null;
+    }
+  };
+
   return (
-    <StoreContext.Provider value={{ phones, cart, addToCart, removeFromCart }}>
+    <StoreContext.Provider
+      value={{ phones, cart, addToCart, removeFromCart, getPhoneById }}
+    >
       {children}
     </StoreContext.Provider>
   );

@@ -16,7 +16,7 @@ export const PhoneCard: React.FC<PhoneCardProps> = ({ phone }) => {
       <div className="absolute inset-[-1px] bg-black transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
 
       <div className="relative z-10">
-        <div className="aspect-[1/1] relative mb-4">
+        <div className="aspect-square relative mb-4">
           <img
             src={phone.imageUrl}
             alt={`${phone.brand} ${phone.name}`}

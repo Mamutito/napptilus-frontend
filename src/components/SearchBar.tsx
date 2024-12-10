@@ -8,7 +8,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div className="fixed top-[61px] left-0 right-0 bg-white z-20 pt-10 pb-5">
+    <div className="fixed top-[60px] left-0 right-0 bg-white z-20 md:pt-10 pb-5">
       <div className="container mx-auto px-4 py-4">
         <div className="relative">
           <input
