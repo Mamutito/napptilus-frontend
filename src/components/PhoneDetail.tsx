@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ColorOption, PhoneDetailEntity, StorageOption } from "../types/Phone";
+import { useStore } from "../hooks/useStore";
+import { useNavigate } from "react-router-dom";
 
 interface PhoneDetailProps {
   phone: PhoneDetailEntity;
@@ -9,11 +11,30 @@ const PhoneDetail: React.FC<PhoneDetailProps> = ({ phone }) => {
   const [selectedStorage, setSelectedStorage] =
     useState<StorageOption | null>();
   const [selectedColor, setSelectedColor] = useState<ColorOption | null>();
+  const { addToCart, cart } = useStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSelectedStorage(null);
     setSelectedColor(null);
   }, [phone]);
+
+  const handleAddToCart = () => {
+    if (selectedStorage && selectedColor) {
+      const item = {
+        id: phone.id,
+        name: phone.name,
+        brand: phone.brand,
+        imageUrl: selectedColor.imageUrl,
+        basePrice: selectedStorage.price || phone.basePrice,
+        selectedStorage: selectedStorage.capacity,
+        selectedColor: selectedColor.name,
+      };
+      addToCart(item);
+      localStorage.setItem("cart", JSON.stringify([...cart, item]));
+      navigate("/cart");
+    }
+  };
 
   const currentPrince = selectedStorage?.price || phone.basePrice;
   return (
@@ -82,6 +103,7 @@ const PhoneDetail: React.FC<PhoneDetailProps> = ({ phone }) => {
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
             disabled={!selectedStorage || !selectedColor}
+            onClick={handleAddToCart}
           >
             AÑADIR
           </button>

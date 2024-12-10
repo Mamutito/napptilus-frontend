@@ -1,10 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 import { CartItem, Phone, PhoneDetailEntity } from "../types/Phone";
+import axios from "axios";
 
 interface StoreContextType {
   phones: Phone[];
   cart: CartItem[];
-  addToCart: (phone: Phone) => void;
+  addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   getPhoneById: (id: string) => Promise<PhoneDetailEntity | null>;
 }
@@ -17,7 +18,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [phones, setPhones] = useState<Phone[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const storedCart = localStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
 
   useEffect(() => {
     // Fetch phones from API
@@ -25,7 +29,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         // Solicito 21 elementos en lugar de 20 para que se muestren 20 elementos en la página principal
         // debido al duplicado.
-        const response = await fetch(
+        const response = await axios.get(
           "https://prueba-tecnica-api-tienda-moviles.onrender.com/products?limit=21",
           {
             headers: {
@@ -33,7 +37,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
             },
           }
         );
-        const data = await response.json();
+        const data = response.data;
         // Hay un error en la lista de productos que hay un elemento duplicado,
         // por lo que se filtran los elementos duplicados antes de guardarlos en el estado
         const uniquePhones = data.filter(
@@ -49,27 +53,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchPhones();
   }, []);
 
-  const addToCart = (phone: Phone) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === phone.id);
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === phone.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prevCart, { ...phone, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (id: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-  };
-
   const getPhoneById = async (
     id: string
   ): Promise<PhoneDetailEntity | null> => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         `https://prueba-tecnica-api-tienda-moviles.onrender.com/products/${id}`,
         {
           headers: {
@@ -77,12 +65,19 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
           },
         }
       );
-      const data = await response.json();
-      return data;
+      return response.data;
     } catch (error) {
       console.error("Error fetching phone details:", error);
       return null;
     }
+  };
+
+  const addToCart = (item: CartItem) => {
+    setCart((prevCart) => [...prevCart, item]);
+  };
+
+  const removeFromCart = (id: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
   return (

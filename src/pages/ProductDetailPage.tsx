@@ -21,7 +21,8 @@ const ProductDetailPage = () => {
     fetchPhone();
   }, [id, getPhoneById]);
 
-  if (!phone) return <div>Loading...</div>;
+  if (!phone)
+    return <div className="flex justify-center items-center">Loading...</div>;
 
   return (
     <main className="container mx-auto px-4 md:pt-20 pt-10">

@@ -15,7 +15,7 @@ const Header: React.FC = () => {
         <Link to="/cart" className="relative">
           <ShoppingCart className="w-6 h-6" />
           <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {cart.reduce((total, item) => total + item.quantity, 0)}
+            {cart.length}
           </span>
         </Link>
       </div>

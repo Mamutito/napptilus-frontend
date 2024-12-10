@@ -7,7 +7,8 @@ export interface Phone {
 }
 
 export interface CartItem extends Phone {
-  quantity: number;
+  selectedStorage: string;
+  selectedColor: string;
 }
 
 export interface ColorOption {
