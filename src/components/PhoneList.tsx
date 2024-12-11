@@ -9,6 +9,10 @@ interface PhoneListProps {
 export const PhoneList: React.FC<PhoneListProps> = ({ searchTerm }) => {
   const { phones } = useStore();
 
+  if (!phones.length) {
+    return <div>Loading...</div>;
+  }
+
   const filteredPhones = phones.filter(
     (phone) =>
       phone.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
