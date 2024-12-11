@@ -7,8 +7,8 @@ Reto frontEnd para empresa Napptilus.
 1. Clonar el repositorio:
 
    ```sh
-   git clone https://github.com/tu-usuario/tu-repositorio.git
-   cd tu-repositorio
+   git clone https://github.com/Mamutito/napptilus-frontend.git
+   cd napptilus-frontend
    ```
 
 2. Instalar las dependencias:
