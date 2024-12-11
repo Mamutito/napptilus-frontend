@@ -83,6 +83,7 @@ const PhoneDetail: React.FC<PhoneDetailProps> = ({ phone }) => {
               {phone.colorOptions.map((color) => (
                 <button
                   key={color.name}
+                  data-testid="color-button"
                   onClick={() => setSelectedColor(color)}
                   className={`w-5 aspect-square ${
                     selectedColor?.name === color.name

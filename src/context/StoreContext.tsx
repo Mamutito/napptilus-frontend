@@ -77,7 +77,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeFromCart = (id: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+    setCart((prevCart) => {
+      const newCart = prevCart.filter((item) => item.id !== id);
+      localStorage.setItem("cart", JSON.stringify(newCart));
+      return newCart;
+    });
   };
 
   return (
